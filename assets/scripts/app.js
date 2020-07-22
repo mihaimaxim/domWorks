@@ -9,7 +9,19 @@ const movieList = document.getElementById("movie-list");
 
 let movies = [];
 
-populateMovieList = (title, imgURL, rating) => {
+deleteMovieElement = (movieId) => {
+   let movieIndex = 0;
+   for (let movie of movies) {
+      if (movie.id === movieId) {
+         break;
+      }
+      movieIndex++;
+   }
+   movies.splice(movieIndex, 1);
+   movieList.children[movieIndex].remove();
+};
+
+populateMovieList = (id, title, imgURL, rating) => {
    const movieElement = document.createElement("li");
    movieElement.className = "movie-element";
    movieElement.innerHTML = `
@@ -21,6 +33,7 @@ populateMovieList = (title, imgURL, rating) => {
       <p>${rating}/5 stars</p>
    </div>
    `;
+   movieElement.addEventListener("click", deleteMovieElement.bind(null, id));
    movieList.appendChild(movieElement);
 };
 
@@ -48,6 +61,7 @@ clearInputs = () => {
 };
 
 confirmMovieModal = () => {
+   const id = Math.random();
    const titleInput = userInputs[0].value;
    const imgUrlInput = userInputs[1].value;
    const ratingInput = userInputs[2].value;
@@ -64,6 +78,7 @@ confirmMovieModal = () => {
    }
 
    let movie = {
+      id: id,
       title: titleInput,
       url: imgUrlInput,
       rating: ratingInput,
@@ -75,7 +90,7 @@ confirmMovieModal = () => {
    // movies = [];
    clearInputs();
    updateUI();
-   populateMovieList(titleInput, imgUrlInput, ratingInput);
+   populateMovieList(movie.id, movie.title, movie.url, movie.rating);
 };
 
 cancelMovieModal = () => {
